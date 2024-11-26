@@ -22,14 +22,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class StreamsOnAssignmentCallbackCompletedEvent extends ApplicationEvent {
+public class StreamsOnTasksRevokedCallbackCompletedEvent extends ApplicationEvent {
 
     private final CompletableFuture<Void> future;
     private final Optional<KafkaException> error;
 
-    public StreamsOnAssignmentCallbackCompletedEvent(final CompletableFuture<Void> future,
-                                                     final Optional<KafkaException> error) {
-        super(Type.STREAMS_ON_ASSIGNMENT_CALLBACK_COMPLETED);
+    public StreamsOnTasksRevokedCallbackCompletedEvent(final CompletableFuture<Void> future,
+                                                       final Optional<KafkaException> error) {
+        super(Type.STREAMS_ON_TASKS_REVOKED_CALLBACK_COMPLETED);
         this.future = Objects.requireNonNull(future);
         this.error = Objects.requireNonNull(error);
     }
