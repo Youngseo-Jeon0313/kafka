@@ -364,8 +364,6 @@ object TestUtils extends Logging {
   def setIbpAndMessageFormatVersions(config: Properties, version: MetadataVersion): Unit = {
     config.setProperty(ReplicationConfigs.INTER_BROKER_PROTOCOL_VERSION_CONFIG, version.version)
     // for clarity, only set the log message format version if it's not ignored
-    if (!LogConfig.shouldIgnoreMessageFormatVersion(version))
-      config.setProperty(ServerLogConfigs.LOG_MESSAGE_FORMAT_VERSION_CONFIG, version.version)
   }
 
   def createAdminClient[B <: KafkaBroker](

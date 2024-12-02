@@ -41,7 +41,6 @@ class TestDowngrade(EndToEndTest):
             self.kafka.stop_node(node)
             node.version = DEV_BRANCH
             node.config[config_property.INTER_BROKER_PROTOCOL_VERSION] = str(kafka_version)
-            node.config[config_property.MESSAGE_FORMAT_VERSION] = str(kafka_version)
             self.kafka.start_node(node)
             self.wait_until_rejoin()
 
@@ -50,7 +49,6 @@ class TestDowngrade(EndToEndTest):
             self.kafka.stop_node(node)
             node.version = kafka_version
             del node.config[config_property.INTER_BROKER_PROTOCOL_VERSION]
-            del node.config[config_property.MESSAGE_FORMAT_VERSION]
             self.kafka.start_node(node)
             self.wait_until_rejoin()
 

@@ -17,22 +17,17 @@
 
 package kafka.cluster
 
-import java.lang.{Long => JLong}
-import java.util.{Optional, Properties}
-import java.util.concurrent._
-import java.util.concurrent.atomic.AtomicBoolean
 import kafka.log._
 import kafka.server._
 import kafka.server.metadata.MockConfigRepository
 import kafka.utils._
-import org.apache.kafka.common.TopicIdPartition
 import org.apache.kafka.common.config.TopicConfig
 import org.apache.kafka.common.message.LeaderAndIsrRequestData.LeaderAndIsrPartitionState
 import org.apache.kafka.common.protocol.ApiKeys
 import org.apache.kafka.common.record.{MemoryRecords, SimpleRecord}
 import org.apache.kafka.common.requests.FetchRequest
 import org.apache.kafka.common.utils.Utils
-import org.apache.kafka.common.{TopicPartition, Uuid}
+import org.apache.kafka.common.{TopicIdPartition, TopicPartition, Uuid}
 import org.apache.kafka.coordinator.transaction.TransactionLogConfig
 import org.apache.kafka.metadata.LeaderAndIsr
 import org.apache.kafka.server.common.{MetadataVersion, RequestLocal}
@@ -41,13 +36,17 @@ import org.apache.kafka.server.storage.log.{FetchIsolation, FetchParams}
 import org.apache.kafka.server.util.MockTime
 import org.apache.kafka.storage.internals.checkpoint.OffsetCheckpoints
 import org.apache.kafka.storage.internals.epoch.LeaderEpochFileCache
-import org.apache.kafka.storage.internals.log.{AppendOrigin, CleanerConfig, LocalLog, LogAppendInfo, LogConfig, LogDirFailureChannel, LogLoader, LogSegments, ProducerStateManager, ProducerStateManagerConfig, VerificationGuard}
+import org.apache.kafka.storage.internals.log.{UnifiedLog, _}
 import org.apache.kafka.storage.log.metrics.BrokerTopicStats
 import org.junit.jupiter.api.Assertions.{assertEquals, assertFalse, assertTrue}
 import org.junit.jupiter.api.{AfterEach, BeforeEach, Test}
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.{mock, when}
 
+import java.lang.{Long => JLong}
+import java.util.concurrent._
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.{Optional, Properties}
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.jdk.OptionConverters.RichOption
@@ -303,7 +302,7 @@ class PartitionLockTest extends Logging {
         val logDirFailureChannel = new LogDirFailureChannel(1)
         val segments = new LogSegments(log.topicPartition)
         val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-          log.dir, log.topicPartition, logDirFailureChannel, log.config.recordVersion, "", None, mockTime.scheduler)
+          log.dir, log.topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
         val maxTransactionTimeout = 5 * 60 * 1000
         val producerStateManagerConfig = new ProducerStateManagerConfig(TransactionLogConfig.PRODUCER_ID_EXPIRATION_MS_DEFAULT, false)
         val producerStateManager = new ProducerStateManager(

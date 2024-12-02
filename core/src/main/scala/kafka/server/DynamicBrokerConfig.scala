@@ -29,7 +29,7 @@ import kafka.utils.{CoreUtils, Logging}
 import kafka.zk.{AdminZkClient, KafkaZkClient}
 import org.apache.kafka.common.Reconfigurable
 import org.apache.kafka.common.config.internals.BrokerSecurityConfigs
-import org.apache.kafka.common.config.{AbstractConfig, ConfigDef, ConfigException, SaslConfigs, SslConfigs, TopicConfig}
+import org.apache.kafka.common.config.{AbstractConfig, ConfigDef, ConfigException, SaslConfigs, SslConfigs}
 import org.apache.kafka.common.metrics.{Metrics, MetricsReporter}
 import org.apache.kafka.common.config.types.Password
 import org.apache.kafka.common.network.{ListenerName, ListenerReconfigurable}
@@ -670,7 +670,7 @@ object DynamicLogConfig {
    * For now, message.format.version is not reconfigurable, since we need to check that
    * the version is supported on all brokers in the cluster.
    */
-  val NonReconfigrableLogConfigs: Set[String] = Set(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG)
+  val NonReconfigrableLogConfigs: Set[String] = Set() //Set(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG)
 
   /**
    * The broker configurations pertaining to logs that are reconfigurable. This set contains

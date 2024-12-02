@@ -24,24 +24,24 @@ import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.compress.Compression
 import org.apache.kafka.common.config.TopicConfig
 import org.apache.kafka.common.errors.KafkaStorageException
-import org.apache.kafka.common.record.{ControlRecordType, DefaultRecordBatch, MemoryRecords, RecordBatch, RecordVersion, SimpleRecord, TimestampType}
+import org.apache.kafka.common.record._
 import org.apache.kafka.common.utils.{Time, Utils}
 import org.apache.kafka.coordinator.transaction.TransactionLogConfig
 import org.apache.kafka.server.common.MetadataVersion
 import org.apache.kafka.server.common.MetadataVersion.IBP_0_11_0_IV0
 import org.apache.kafka.server.util.{MockTime, Scheduler}
-import org.apache.kafka.storage.internals.epoch.LeaderEpochFileCache
-import org.apache.kafka.storage.internals.log.{AbortedTxn, CleanerConfig, EpochEntry, LocalLog, LogConfig, LogDirFailureChannel, LogFileUtils, LogLoader, LogOffsetMetadata, LogSegment, LogSegments, LogStartOffsetIncrementReason, OffsetIndex, ProducerStateManager, ProducerStateManagerConfig, SnapshotFile}
 import org.apache.kafka.storage.internals.checkpoint.CleanShutdownFileHandler
+import org.apache.kafka.storage.internals.epoch.LeaderEpochFileCache
+import org.apache.kafka.storage.internals.log._
 import org.apache.kafka.storage.log.metrics.BrokerTopicStats
-import org.junit.jupiter.api.Assertions.{assertDoesNotThrow, assertEquals, assertFalse, assertNotEquals, assertThrows, assertTrue}
+import org.junit.jupiter.api.Assertions._
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.{AfterEach, BeforeEach, Test}
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.mockito.{ArgumentMatchers, Mockito}
 import org.mockito.ArgumentMatchers.{any, anyLong}
-import org.mockito.Mockito.{mock, reset, times, verify, when}
+import org.mockito.Mockito._
+import org.mockito.{ArgumentMatchers, Mockito}
 
 import java.io.{BufferedWriter, File, FileWriter, IOException}
 import java.lang.{Long => JLong}
@@ -158,7 +158,7 @@ class LogLoaderTest {
           val logDirFailureChannel: LogDirFailureChannel = new LogDirFailureChannel(1)
           val segments = new LogSegments(topicPartition)
           val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-            logDir, topicPartition, logDirFailureChannel, config.recordVersion, "", None, time.scheduler)
+            logDir, topicPartition, logDirFailureChannel, "", None, time.scheduler)
           val producerStateManager = new ProducerStateManager(topicPartition, logDir,
             this.maxTransactionTimeoutMs, this.producerStateManagerConfig, time)
           val logLoader = new LogLoader(logDir, topicPartition, config, time.scheduler, time,
@@ -315,7 +315,6 @@ class LogLoaderTest {
   private def testProducerSnapshotsRecoveryAfterUncleanShutdown(messageFormatVersion: String): Unit = {
     val logProps = new Properties()
     logProps.put(TopicConfig.SEGMENT_BYTES_CONFIG, "640")
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, messageFormatVersion)
     val logConfig = new LogConfig(logProps)
     var log = createLog(logDir, logConfig)
     assertEquals(OptionalLong.empty(), log.oldestProducerSnapshotOffset)
@@ -372,7 +371,7 @@ class LogLoaderTest {
         }
       }
       val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-        logDir, topicPartition, logDirFailureChannel, logConfig.recordVersion, "", None, mockTime.scheduler)
+        logDir, topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
       val producerStateManager = new ProducerStateManager(topicPartition, logDir,
         maxTransactionTimeoutMs, producerStateManagerConfig, mockTime)
       val logLoader = new LogLoader(
@@ -440,7 +439,7 @@ class LogLoaderTest {
     val config = new LogConfig(new Properties())
     val segments = new LogSegments(topicPartition)
     val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-      logDir, topicPartition, logDirFailureChannel, config.recordVersion, "", None, mockTime.scheduler)
+      logDir, topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
     val offsets = new LogLoader(
       logDir,
       topicPartition,
@@ -547,12 +546,11 @@ class LogLoaderTest {
 
     val topicPartition = UnifiedLog.parseTopicPartitionName(logDir)
     val logProps = new Properties()
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.10.2")
     val config = new LogConfig(logProps)
     val logDirFailureChannel = null
     val segments = new LogSegments(topicPartition)
     val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-      logDir, topicPartition, logDirFailureChannel, config.recordVersion, "", None, mockTime.scheduler)
+      logDir, topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
     val offsets = new LogLoader(
       logDir,
       topicPartition,
@@ -604,12 +602,11 @@ class LogLoaderTest {
 
     val topicPartition = UnifiedLog.parseTopicPartitionName(logDir)
     val logProps = new Properties()
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.10.2")
     val config = new LogConfig(logProps)
     val logDirFailureChannel = null
     val segments = new LogSegments(topicPartition)
     val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-      logDir, topicPartition, logDirFailureChannel, config.recordVersion, "", None, mockTime.scheduler)
+      logDir, topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
     val offsets = new LogLoader(
       logDir,
       topicPartition,
@@ -660,12 +657,11 @@ class LogLoaderTest {
 
     val topicPartition = UnifiedLog.parseTopicPartitionName(logDir)
     val logProps = new Properties()
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.11.0")
     val config = new LogConfig(logProps)
     val logDirFailureChannel = null
     val segments = new LogSegments(topicPartition)
     val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-      logDir, topicPartition, logDirFailureChannel, config.recordVersion, "", None, mockTime.scheduler)
+      logDir, topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
     val offsets = new LogLoader(
       logDir,
       topicPartition,
@@ -899,7 +895,6 @@ class LogLoaderTest {
     val logProps = new Properties()
     logProps.put(TopicConfig.SEGMENT_BYTES_CONFIG, segmentSize.toString)
     logProps.put(TopicConfig.INDEX_INTERVAL_BYTES_CONFIG, "1")
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.9.0")
     val logConfig = new LogConfig(logProps)
     var log = createLog(logDir, logConfig)
     for (i <- 0 until numMessages)
@@ -1130,7 +1125,6 @@ class LogLoaderTest {
     logProps.put(TopicConfig.SEGMENT_BYTES_CONFIG, "1000")
     logProps.put(TopicConfig.INDEX_INTERVAL_BYTES_CONFIG, "1")
     logProps.put(TopicConfig.MAX_MESSAGE_BYTES_CONFIG, "65536")
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.10.2")
     val downgradedLogConfig = new LogConfig(logProps)
     val reopened = createLog(logDir, downgradedLogConfig, lastShutdownClean = false)
     LogTestUtils.assertLeaderEpochCacheEmpty(reopened)
@@ -1814,7 +1808,7 @@ class LogLoaderTest {
     assertEquals(5, segments.firstSegment.get.baseOffset)
 
     val leaderEpochCache = UnifiedLog.maybeCreateLeaderEpochCache(
-      logDir, topicPartition, logDirFailureChannel, logConfig.recordVersion, "", None, mockTime.scheduler)
+      logDir, topicPartition, logDirFailureChannel, "", None, mockTime.scheduler)
     val offsets = new LogLoader(
       logDir,
       topicPartition,

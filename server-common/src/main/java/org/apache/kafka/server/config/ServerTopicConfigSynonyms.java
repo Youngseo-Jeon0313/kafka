@@ -84,7 +84,6 @@ public final class ServerTopicConfigSynonyms {
         sameName(TopicConfig.COMPRESSION_LZ4_LEVEL_CONFIG),
         sameName(TopicConfig.COMPRESSION_ZSTD_LEVEL_CONFIG),
         sameNameWithLogPrefix(TopicConfig.PREALLOCATE_CONFIG),
-        sameNameWithLogPrefix(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG),
         sameNameWithLogPrefix(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG),
         sameNameWithLogPrefix(TopicConfig.MESSAGE_TIMESTAMP_BEFORE_MAX_MS_CONFIG),
         sameNameWithLogPrefix(TopicConfig.MESSAGE_TIMESTAMP_AFTER_MAX_MS_CONFIG),

@@ -220,9 +220,6 @@ class DynamicBrokerConfigTest {
     // Test update of configs with invalid type
     val invalidProps = Map(CleanerConfig.LOG_CLEANER_THREADS_PROP -> "invalid")
     verifyConfigUpdateWithInvalidConfig(config, origProps, validProps, invalidProps)
-
-    val excludedTopicConfig = Map(ServerLogConfigs.LOG_MESSAGE_FORMAT_VERSION_CONFIG -> "0.10.2")
-    verifyConfigUpdateWithInvalidConfig(config, origProps, validProps, excludedTopicConfig)
   }
 
   @Test

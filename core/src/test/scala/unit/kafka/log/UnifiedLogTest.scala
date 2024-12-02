@@ -2594,7 +2594,6 @@ class UnifiedLogTest {
     logProps.put(TopicConfig.SEGMENT_BYTES_CONFIG, "1000")
     logProps.put(TopicConfig.INDEX_INTERVAL_BYTES_CONFIG, "1")
     logProps.put(TopicConfig.MAX_MESSAGE_BYTES_CONFIG, "65536")
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.10.2")
     val downgradedLogConfig = new LogConfig(logProps)
     log.updateConfig(downgradedLogConfig)
     LogTestUtils.assertLeaderEpochCacheEmpty(log)
@@ -2611,14 +2610,12 @@ class UnifiedLogTest {
     logProps.put(TopicConfig.SEGMENT_BYTES_CONFIG, "1000")
     logProps.put(TopicConfig.INDEX_INTERVAL_BYTES_CONFIG, "1")
     logProps.put(TopicConfig.MAX_MESSAGE_BYTES_CONFIG, "65536")
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.10.2")
     val logConfig = new LogConfig(logProps)
     val log = createLog(logDir, logConfig)
     log.appendAsLeader(TestUtils.records(List(new SimpleRecord("bar".getBytes())),
       magicValue = RecordVersion.V1.value), leaderEpoch = 5)
     LogTestUtils.assertLeaderEpochCacheEmpty(log)
 
-    logProps.put(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG, "0.11.0")
     val upgradedLogConfig = new LogConfig(logProps)
     log.updateConfig(upgradedLogConfig)
     log.appendAsLeader(TestUtils.records(List(new SimpleRecord("foo".getBytes()))), leaderEpoch = 5)

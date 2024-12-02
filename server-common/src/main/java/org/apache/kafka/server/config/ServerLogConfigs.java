@@ -106,19 +106,6 @@ public class ServerLogConfigs {
     public static final String LOG_PRE_ALLOCATE_CONFIG = ServerTopicConfigSynonyms.serverSynonym(TopicConfig.PREALLOCATE_CONFIG);
     public static final String LOG_PRE_ALLOCATE_ENABLE_DOC = "Should pre allocate file when create new segment? If you are using Kafka on Windows, you probably need to set it to true.";
 
-    /* See `TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG` for details */
-    /**
-     * @deprecated since "3.0"
-     */
-    @Deprecated
-    public static final String LOG_MESSAGE_FORMAT_VERSION_CONFIG = ServerTopicConfigSynonyms.serverSynonym(TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG);
-    @Deprecated
-    public static final String LOG_MESSAGE_FORMAT_VERSION_DEFAULT = IBP_3_0_IV1.version();
-    public static final String LOG_MESSAGE_FORMAT_VERSION_DOC = "Specify the message format version the broker will use to append messages to the logs. The value should be a valid MetadataVersion. " +
-            "Some examples are: 0.8.2, 0.9.0.0, 0.10.0, check MetadataVersion for more details. By setting a particular message format version, the " +
-            "user is certifying that all the existing messages on disk are smaller or equal than the specified version. Setting this value incorrectly " +
-            "will cause consumers with older versions to break as they will receive messages with a format that they don't understand.";
-
     public static final String LOG_MESSAGE_TIMESTAMP_TYPE_CONFIG = ServerTopicConfigSynonyms.serverSynonym(TopicConfig.MESSAGE_TIMESTAMP_TYPE_CONFIG);
     public static final String LOG_MESSAGE_TIMESTAMP_TYPE_DEFAULT = "CreateTime";
     public static final String LOG_MESSAGE_TIMESTAMP_TYPE_DOC = "Define whether the timestamp in the message is message create time or log append time. The value should be either " +

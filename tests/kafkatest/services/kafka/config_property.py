@@ -59,7 +59,6 @@ ZOOKEEPER_CLIENT_CNXN_SOCKET = "zookeeper.clientCnxnSocket"
 ZOOKEEPER_CONNECTION_TIMEOUT_MS = "zookeeper.connection.timeout.ms"
 ZOOKEEPER_SESSION_TIMEOUT_MS = "zookeeper.session.timeout.ms"
 INTER_BROKER_PROTOCOL_VERSION = "inter.broker.protocol.version"
-MESSAGE_FORMAT_VERSION = "log.message.format.version"
 MESSAGE_TIMESTAMP_TYPE = "message.timestamp.type"
 THROTTLING_REPLICATION_RATE_LIMIT = "replication.quota.throttled.rate"
 

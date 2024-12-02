@@ -659,15 +659,11 @@ class KafkaConfigTest {
     assertEquals(MetadataVersion.latestProduction, conf.interBrokerProtocolVersion)
 
     props.setProperty(ReplicationConfigs.INTER_BROKER_PROTOCOL_VERSION_CONFIG, "0.8.2.0")
-    // We need to set the message format version to make the configuration valid.
-    props.setProperty(ServerLogConfigs.LOG_MESSAGE_FORMAT_VERSION_CONFIG, "0.8.2.0")
     val conf2 = KafkaConfig.fromProps(props)
     assertEquals(IBP_0_8_2, conf2.interBrokerProtocolVersion)
 
     // check that 0.8.2.0 is the same as 0.8.2.1
     props.setProperty(ReplicationConfigs.INTER_BROKER_PROTOCOL_VERSION_CONFIG, "0.8.2.1")
-    // We need to set the message format version to make the configuration valid
-    props.setProperty(ServerLogConfigs.LOG_MESSAGE_FORMAT_VERSION_CONFIG, "0.8.2.1")
     val conf3 = KafkaConfig.fromProps(props)
     assertEquals(IBP_0_8_2, conf3.interBrokerProtocolVersion)
 
@@ -824,7 +820,6 @@ class KafkaConfigTest {
     def buildConfig(interBrokerProtocol: MetadataVersion, messageFormat: MetadataVersion): KafkaConfig = {
       val props = TestUtils.createBrokerConfig(0, TestUtils.MockZkConnect, port = 8181)
       props.setProperty(ReplicationConfigs.INTER_BROKER_PROTOCOL_VERSION_CONFIG, interBrokerProtocol.version)
-      props.setProperty(ServerLogConfigs.LOG_MESSAGE_FORMAT_VERSION_CONFIG, messageFormat.version)
       KafkaConfig.fromProps(props)
     }
 
@@ -1235,7 +1230,6 @@ class KafkaConfigTest {
           assertDynamic(kafkaConfigProp, 10015L, () => config.remoteLogManagerConfig.logLocalRetentionMs)
         case TopicConfig.LOCAL_LOG_RETENTION_BYTES_CONFIG =>
           assertDynamic(kafkaConfigProp, 10016L, () => config.remoteLogManagerConfig.logLocalRetentionBytes)
-        case TopicConfig.MESSAGE_FORMAT_VERSION_CONFIG =>
         // not dynamically updatable
         case QuotaConfig.FOLLOWER_REPLICATION_THROTTLED_REPLICAS_CONFIG =>
         // topic only config
